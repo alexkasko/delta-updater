@@ -13,7 +13,6 @@
             </includes>
             <excludes>
                 <exclude>${artifact.artifactId}</exclude>
-                <exclude>${artifact.artifactId}-nohup</exclude>
                 <exclude>**/*.sh</exclude>
             </excludes>
         </fileSet>
@@ -22,7 +21,6 @@
             <outputDirectory>/</outputDirectory>
             <includes>
                 <include>${artifact.artifactId}</include>
-                <include>${artifact.artifactId}-nohup</include>
                 <include>**/*.sh</include>
             </includes>
             <fileMode>755</fileMode>

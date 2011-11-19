@@ -3,11 +3,11 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>delta-updater</groupId>
     <artifactId>delta-updater</artifactId>
     <packaging>pom</packaging>
-    <version>0.7</version>
+    <version>1.0</version>
+    <name>Delta Updater Application</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -19,6 +19,7 @@
     <modules>
         <module>delta-diff</module>
         <module>delta-patch</module>
+        <module>delta-common</module>
     </modules>
 
     <repositories>

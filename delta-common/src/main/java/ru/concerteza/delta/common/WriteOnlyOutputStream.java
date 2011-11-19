@@ -1,4 +1,4 @@
-package ru.concerteza.util.delta;
+package ru.concerteza.delta.common;
 
 import java.io.IOException;
 import java.io.OutputStream;
