@@ -105,7 +105,7 @@
             <plugin>
                 <groupId>ru.concerteza.buildnumber</groupId>
                 <artifactId>maven-jgit-buildnumber-plugin</artifactId>
-                <version>1.0</version>
+                <version>1.2.1</version>
                 <executions>
                     <execution>
                         <id>git-buildnumber</id>

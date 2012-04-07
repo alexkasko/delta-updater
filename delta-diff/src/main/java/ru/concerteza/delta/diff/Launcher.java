@@ -16,7 +16,6 @@ public class Launcher {
     private static final String OUTPUT_OPTION = "out";
 
     public static void main(String[] args) throws Exception {
-//        System.console().readLine();
        Options options = new Options();
         try {
             options.addOption("h", HELP_OPTION, false, "show this page");
