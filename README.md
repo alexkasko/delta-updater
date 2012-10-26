@@ -53,7 +53,7 @@ Both `DirDeltaCreator` and `DirDeltaPatcher` are thread-safe (stateless).
 Using utilities
 ---------------
 
-`delta-diff` and `delta-patch` programs (they will be put into `delta-updater/delta-xxx/target/delta-xxx-1.0-distr`) can be used as
+`delta-diff` and `delta-patch` programs (they will be put into `delta-updater/delta-xxx/target/delta-xxx-yyy-distr`) can be used as
 command line utilities.
 
 Patch creation:
