@@ -1,4 +1,4 @@
-package ru.concerteza.delta.diff;
+package com.alexkasko.delta;
 
 import com.google.common.base.Function;
 import com.google.common.collect.*;
@@ -11,9 +11,6 @@ import org.apache.commons.io.IOCase;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
-import ru.concerteza.delta.common.IndexEntry;
-import ru.concerteza.delta.common.DeltaIndex;
-import ru.concerteza.delta.common.WriteOnlyOutputStream;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -27,15 +24,26 @@ import java.util.zip.ZipOutputStream;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.apache.commons.io.FileUtils.listFiles;
 import static org.apache.commons.io.FilenameUtils.separatorsToUnix;
-import static ru.concerteza.delta.common.Sha1Utils.computeSha1;
+import static com.alexkasko.delta.HashUtils.computeSha1;
 
 /**
- * User: alexey
+ * Creates ZIP file (or stream) with GDIFF deltas for all changed files and '.index' text file
+ * (with '.index_' prefix) with list of unchanged, added, updated and deleted files with SHA1 hash sums
+ *
+ * @author alexkasko
  * Date: 11/18/11
  */
 public class DirDeltaCreator {
     private static final String EMPTY_STRING = "";
 
+    /**
+     * Creates patch ZIP file
+     *
+     * @param oldDir old version of directory
+     * @param newDir new version of directory
+     * @param outFile file to write patch into
+     * @throws IOException on any io or consistency problem
+     */
     public void create(File oldDir, File newDir, File outFile) throws IOException {
         OutputStream out = null;
         try {
@@ -47,12 +55,21 @@ public class DirDeltaCreator {
         }
     }
 
+    /**
+     * Writes zipped patch into provided output stream
+     *
+     * @param oldDir old version of directory
+     * @param newDir new version of directory
+     * @param filter IO filter to select files
+     * @param patch output stream to write patch into
+     * @throws IOException on any io or consistency problem
+     */
     public void create(File oldDir, File newDir, IOFileFilter filter, OutputStream patch) throws IOException {
         DeltaIndex paths = readDeltaPaths(oldDir, newDir, filter);
         ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(patch));
         writeIndex(paths, out);
-        writeCreated(paths.getCreated(), newDir, out);
-        writeUpdated(paths.getUpdated(), oldDir, newDir, out);
+        writeCreated(paths.created, newDir, out);
+        writeUpdated(paths.updated, oldDir, newDir, out);
         out.close();
     }
 
@@ -70,12 +87,12 @@ public class DirDeltaCreator {
         List<String> existedPaths = Ordering.natural().immutableSortedCopy(Sets.intersection(oldSet, newSet));
         List<String> deletedPaths = Ordering.natural().immutableSortedCopy(Sets.difference(oldSet, newSet));
         // converting
-        List<IndexEntry.Created> created = ImmutableList.copyOf(Lists.transform(createdPaths, new CreatedIndexer(newDir)));
-        List<IndexEntry.Deleted> deleted = ImmutableList.copyOf(Lists.transform(deletedPaths, new DeletedIndexer(oldDir)));
+        ImmutableList<IndexEntry.Created> created = ImmutableList.copyOf(Lists.transform(createdPaths, new CreatedIndexer(newDir)));
+        ImmutableList<IndexEntry.Deleted> deleted = ImmutableList.copyOf(Lists.transform(deletedPaths, new DeletedIndexer(oldDir)));
         List<IndexEntry> existed = Lists.transform(existedPaths, new ExistedIndexer(oldDir, newDir));
         // partitioning
-        List<IndexEntry.Updated> updated = ImmutableList.copyOf(Iterables.filter(existed, IndexEntry.Updated.class));
-        List<IndexEntry.Unchanged> unchanged = ImmutableList.copyOf(Iterables.filter(existed, IndexEntry.Unchanged.class));
+        ImmutableList<IndexEntry.Updated> updated = ImmutableList.copyOf(Iterables.filter(existed, IndexEntry.Updated.class));
+        ImmutableList<IndexEntry.Unchanged> unchanged = ImmutableList.copyOf(Iterables.filter(existed, IndexEntry.Unchanged.class));
         return new DeltaIndex(created, deleted, updated, unchanged);
     }
 
@@ -94,8 +111,8 @@ public class DirDeltaCreator {
 
     private void writeCreated(List<IndexEntry.Created> paths, File newDir, ZipOutputStream out) throws IOException {
         for(IndexEntry.Created en : paths) {
-            out.putNextEntry(new ZipEntry(en.getPath()));
-            File file = new File(newDir, en.getPath());
+            out.putNextEntry(new ZipEntry(en.path));
+            File file = new File(newDir, en.path);
             FileUtils.copyFile(file, out);
             out.closeEntry();
         }
@@ -103,21 +120,21 @@ public class DirDeltaCreator {
 
     private void writeUpdated(List<IndexEntry.Updated> paths, File oldDir, File newDir, ZipOutputStream out) throws IOException {
         for(IndexEntry.Updated en : paths) {
-            out.putNextEntry(new ZipEntry(en.getPath() + ".gdiff"));
-            File source = new File(oldDir, en.getPath());
-            File target = new File(newDir, en.getPath());
+            out.putNextEntry(new ZipEntry(en.path + ".gdiff"));
+            File source = new File(oldDir, en.path);
+            File target = new File(newDir, en.path);
             computeDelta(source, target, out);
             out.closeEntry();
         }
     }
 
     private void computeDelta(File source, File target, OutputStream out) throws IOException {
-        OutputStream guarded = WriteOnlyOutputStream.wrap(out);
+        OutputStream guarded = new NoCloseOutputStream(out);
         GDiffWriter writer = new GDiffWriter(guarded);
         new Delta().compute(source, target, writer);
     }
 
-    private class Relativiser implements Function<File, String> {
+    private static class Relativiser implements Function<File, String> {
         private final String parent;
 
         private Relativiser(File parent) {
@@ -134,7 +151,7 @@ public class DirDeltaCreator {
         }
     }
 
-    private class CreatedIndexer implements Function<String, IndexEntry.Created> {
+    private static class CreatedIndexer implements Function<String, IndexEntry.Created> {
         private final File parent;
 
         private CreatedIndexer(File parent) {
@@ -148,7 +165,7 @@ public class DirDeltaCreator {
         }
     }
 
-    private class DeletedIndexer implements Function<String, IndexEntry.Deleted> {
+    private static class DeletedIndexer implements Function<String, IndexEntry.Deleted> {
         private final File parent;
 
         private DeletedIndexer(File parent) {
@@ -162,7 +179,7 @@ public class DirDeltaCreator {
         }
     }
 
-    private class ExistedIndexer implements Function<String, IndexEntry> {
+    private static class ExistedIndexer implements Function<String, IndexEntry> {
         private final File oldParent;
         private final File newParent;
 

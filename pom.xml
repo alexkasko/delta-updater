@@ -3,18 +3,35 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>ru.concerteza.delta</groupId>
-    <artifactId>delta-updater</artifactId>
+    <groupId>com.alexkasko.delta</groupId>
+    <artifactId>delta-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.0</version>
+    <version>1.1-SNAPSHOT</version>
     <name>Delta Updater Application</name>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.specification_vendor>Con Certeza LLC</project.specification_vendor>
-        <project.implementation_vendor>${project.specification_vendor}</project.implementation_vendor>
-        <guava.version>10.0</guava.version>
-    </properties>
+    <description>
+        Utilities and library for creating and applying binary patches to file system directories
+    </description>
+    <url>https://github.com/alexkasko/delta-updater</url>
+    <licenses>
+        <license>
+            <name>Apache License 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
+    <scm>
+        <url>https://github.com/alexkasko/delta-updater</url>
+        <connection>scm:git:https://github.com/alexkasko/delta-updater.git</connection>
+        <developerConnection>scm:git:https://github.com/alexkasko/delta-updater.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+    <developers>
+        <developer>
+            <name>Alex Kasko</name>
+            <email>alex.kasko.mail@gmail.com</email>
+            <url>http://alexkasko.com</url>
+        </developer>
+    </developers>
 
     <modules>
         <module>delta-diff</module>
@@ -22,12 +39,11 @@
         <module>delta-common</module>
     </modules>
 
-    <repositories>
-        <repository>
-            <id>javaxdelta.sourceforge.net</id>
-            <url>http://javaxdelta.sourceforge.net/maven2/repository</url>
-        </repository>
-    </repositories>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.specification_vendor>Alex Kasko</project.specification_vendor>
+        <project.implementation_vendor>${project.specification_vendor}</project.implementation_vendor>
+    </properties>
 
     <build>
         <pluginManagement>
@@ -43,17 +59,8 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-source-plugin</artifactId>
-                    <version>2.1.2</version>
-                    <executions>
-                        <execution>
-                            <id>attach-sources</id>
-                            <phase>verify</phase>
-                            <goals>
-                                <goal>jar</goal>
-                            </goals>
-                        </execution>
-                    </executions>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>2.7</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -103,18 +110,61 @@
         </pluginManagement>
         <plugins>
             <plugin>
-                <groupId>ru.concerteza.buildnumber</groupId>
-                <artifactId>maven-jgit-buildnumber-plugin</artifactId>
-                <version>1.2.1</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.1.2</version>
                 <executions>
                     <execution>
-                        <id>git-buildnumber</id>
+                        <id>attach-sources</id>
                         <goals>
-                            <goal>extract-buildnumber</goal>
+                            <goal>jar</goal>
                         </goals>
-                        <phase>prepare-package</phase>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.8.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadoc</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <linksource>true</linksource>
+                            <quiet>true</quiet>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.4</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                        <configuration>
+                            <passphrase>nopwd</passphrase>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <pushChanges>false</pushChanges>
+                    <tagNameFormat>@{project.version}</tagNameFormat>
+                    <localCheckout>true</localCheckout>
+                </configuration>
             </plugin>
         </plugins>
     </build>

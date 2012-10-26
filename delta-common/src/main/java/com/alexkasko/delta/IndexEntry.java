@@ -1,15 +1,19 @@
-package ru.concerteza.delta.common;
+package com.alexkasko.delta;
+
+import org.apache.commons.lang.builder.ToStringBuilder;
+
+import static org.apache.commons.lang.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 /**
- * User: alexey
+ * User: alexkasko
  * Date: 11/18/11
  */
-public class IndexEntry {
-    public enum State {UNCHANGED, CREATED, UPDATED, DELETED}
-    private final String path;
-    private final State state;
-    private final String oldSha1;
-    private final String newSha1;
+abstract class IndexEntry {
+    enum State {UNCHANGED, CREATED, UPDATED, DELETED}
+    final String path;
+    final State state;
+    final String oldSha1;
+    final String newSha1;
 
     protected IndexEntry(String path, State state, String oldSha1, String newSha1) {
         this.path = path;
@@ -18,42 +22,35 @@ public class IndexEntry {
         this.newSha1 = newSha1;
     }
 
-    public String getPath() {
-        return path;
-    }
-
-    public String getOldSha1() {
-        return oldSha1;
-    }
-
-    public String getNewSha1() {
-        return newSha1;
-    }
-
     // children for type safety, easy filtering etc
 
-    public static class Created extends IndexEntry {
+    static class Created extends IndexEntry {
         public Created(String path, String oldSha1, String newSha1) {
             super(path, State.CREATED, oldSha1, newSha1);
         }
     }
 
-    public static class Deleted extends IndexEntry {
+    static class Deleted extends IndexEntry {
         public Deleted(String path, String oldSha1, String newSha1) {
             super(path, State.DELETED, oldSha1, newSha1);
         }
     }
 
-    public static class Updated extends IndexEntry {
+    static class Updated extends IndexEntry {
         public Updated(String path,String oldSha1, String newSha1) {
             super(path, State.UPDATED, oldSha1, newSha1);
         }
     }
 
-    public static class Unchanged extends IndexEntry {
+    static class Unchanged extends IndexEntry {
         public Unchanged(String path, String oldSha1, String newSha1) {
             super(path, State.UNCHANGED, oldSha1, newSha1);
         }
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, SHORT_PREFIX_STYLE);
     }
 }
 
