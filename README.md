@@ -1,11 +1,16 @@
 Binary delta patches for directories
 ====================================
 
-Two utilities and library for creating and applying binary patches to file system directories.
+Utilities and library for creating and applying binary patches to file system directories.
 It's based on [Javaxdelta](http://javaxdelta.sourceforge.net/) library - java implementation of [xdelta](http://xdelta.org/) binary diff algorithm.
 [GDIFF](http://www.w3.org/TR/NOTE-gdiff-19970901) format is used for patches.
 
 It can be used to implement auto-updating for rich-client applications.
+
+Delta-diff and delta-patch libraries are available in [Maven cental](http://repo1.maven.org/maven2/com/alexkasko/delta/).
+
+Javadocs for 1.1 release: [delta-diff](https://alexkasko.github.com/delta-updater/diff-javadocs),
+[delta-patch](https://alexkasko.github.com/delta-updater/patch-javadocs)
 
 ###Features
 
