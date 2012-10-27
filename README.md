@@ -82,5 +82,5 @@ License Information
 
 _Note: javaxdelta depends on GNU Trove 1.0.2 library which is distributed under [LGPL license](http://www.gnu.org/licenses/lgpl-2.1.html)_.
 
-You can use any code from this project under terms of [MIT License](http://www.opensource.org/licenses/mit-license.php)
+You may use any code from this project under terms of [MIT License](http://www.opensource.org/licenses/mit-license.php)
 (the same license is used by javaxdelta project itself).
