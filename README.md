@@ -7,7 +7,8 @@ It's based on [Javaxdelta](http://javaxdelta.sourceforge.net/) library - java im
 
 It can be used to implement auto-updating for rich-client applications.
 
-Delta-diff and delta-patch libraries are available in [Maven cental](http://repo1.maven.org/maven2/com/alexkasko/delta/).
+Delta-diff and delta-patch utilities are available in the [Downloads section](https://github.com/alexkasko/delta-updater/downloads)
+libraries are available in [Maven cental](http://repo1.maven.org/maven2/com/alexkasko/delta/).
 
 Javadocs for 1.1 release: [delta-diff](https://alexkasko.github.com/delta-updater/diff-javadocs),
 [delta-patch](https://alexkasko.github.com/delta-updater/patch-javadocs)
