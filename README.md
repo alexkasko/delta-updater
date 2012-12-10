@@ -44,6 +44,15 @@ Patches are applied in fail-fast mode, application will be aborted on first wron
 Using library
 -------------
 
+Maven dependency (available in central repository):
+
+    <dependency>
+        <groupId>com.alexkasko.delta</groupId>
+	    <artifactId>delta-diff</artifactId>
+	    <!--artifactId>delta-patch</artifactId-->
+	    <version>1.1</version>
+    </dependency>
+
 For patch file/stream creation you should use one of these methods:
 
      new DirDeltaCreator().create(oldDirectory, newDirectory, patchFile);
@@ -84,3 +93,14 @@ _Note: javaxdelta depends on GNU Trove 1.0.2 library which is released under the
 
 This project is released under the [MIT License](http://www.opensource.org/licenses/mit-license.php)
 (the same license is used by javaxdelta project).
+
+Changelog
+---------
+
+**1.1** (2012-10-26)
+
+ * code and dependencies cleanup, maven central upload
+
+**1.0** (2011-11-20)
+
+ * initial version
