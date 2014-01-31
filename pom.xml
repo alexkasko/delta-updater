@@ -9,7 +9,7 @@
     <groupId>com.alexkasko.delta</groupId>
     <artifactId>delta-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.1.1-SNAPSHOT</version>
     <name>Delta Updater Application</name>
 
     <description>

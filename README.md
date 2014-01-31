@@ -10,7 +10,7 @@ It can be used to implement auto-updating for rich-client applications.
 Delta-diff and delta-patch utilities are available in the [Downloads section](https://github.com/alexkasko/delta-updater/downloads)
 libraries are available in [Maven cental](http://repo1.maven.org/maven2/com/alexkasko/delta/).
 
-Javadocs for 1.1 release: [delta-diff](http://alexkasko.github.com/delta-updater/diff-javadocs),
+Javadocs: [delta-diff](http://alexkasko.github.com/delta-updater/diff-javadocs),
 [delta-patch](http://alexkasko.github.com/delta-updater/patch-javadocs)
 
 ###Features
@@ -50,7 +50,7 @@ Maven dependency (available in central repository):
         <groupId>com.alexkasko.delta</groupId>
 	    <artifactId>delta-diff</artifactId>
 	    <!--artifactId>delta-patch</artifactId-->
-	    <version>1.1</version>
+	    <version>1.1.1</version>
     </dependency>
 
 For patch file/stream creation you should use one of these methods:
@@ -96,6 +96,10 @@ This project is released under the [MIT License](http://www.opensource.org/licen
 
 Changelog
 ---------
+
+**1.1.1** (2014-01-31)
+
+ * remove `NullOutputStream` usage to support recent versions of Guava
 
 **1.1** (2012-10-26)
 

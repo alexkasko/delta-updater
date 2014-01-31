@@ -1,6 +1,5 @@
 package com.alexkasko.delta;
 
-import com.google.common.io.NullOutputStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.UnhandledException;
 
