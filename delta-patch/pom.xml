@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.alexkasko.delta</groupId>
         <artifactId>delta-parent</artifactId>
-        <version>1.1.1-SNAPSHOT</version>
+        <version>1.1.1</version>
     </parent>
     <artifactId>delta-patch</artifactId>
     <packaging>jar</packaging>
@@ -24,7 +24,7 @@
         <url>https://github.com/alexkasko/delta-updater</url>
         <connection>scm:git:https://github.com/alexkasko/delta-updater.git</connection>
         <developerConnection>scm:git:https://github.com/alexkasko/delta-updater.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>1.1.1</tag>
     </scm>
     <developers>
         <developer>
