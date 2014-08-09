@@ -45,11 +45,24 @@ public class DirDeltaCreator {
      * @throws IOException on any io or consistency problem
      */
     public void create(File oldDir, File newDir, File outFile) throws IOException {
+        create(oldDir, newDir, outFile, IOCase.SYSTEM);
+    }
+
+    /**
+     * Creates patch ZIP file
+     *
+     * @param oldDir old version of directory
+     * @param newDir new version of directory
+     * @param outFile file to write patch into
+     * @param caseSensitive case sensivity flag
+     * @throws IOException on any io or consistency problem
+     */
+    public void create(File oldDir, File newDir, File outFile, IOCase caseSensitive) throws IOException {
         OutputStream out = null;
         try {
             out = FileUtils.openOutputStream(outFile);
             IOFileFilter filter = TrueFileFilter.TRUE;
-            create(oldDir, newDir, filter, out);
+            create(oldDir, newDir, filter, out, caseSensitive);
         } finally {
             IOUtils.closeQuietly(out);
         }
@@ -65,7 +78,21 @@ public class DirDeltaCreator {
      * @throws IOException on any io or consistency problem
      */
     public void create(File oldDir, File newDir, IOFileFilter filter, OutputStream patch) throws IOException {
-        DeltaIndex paths = readDeltaPaths(oldDir, newDir, filter);
+        create(oldDir, newDir, filter, patch, IOCase.SYSTEM);
+    }
+
+    /**
+     * Writes zipped patch into provided output stream
+     *
+     * @param oldDir old version of directory
+     * @param newDir new version of directory
+     * @param filter IO filter to select files
+     * @param patch output stream to write patch into
+     * @param caseSensitive case sensivity flag
+     * @throws IOException on any io or consistency problem
+     */
+    public void create(File oldDir, File newDir, IOFileFilter filter, OutputStream patch, IOCase caseSensitive) throws IOException {
+        DeltaIndex paths = readDeltaPaths(oldDir, newDir, filter, caseSensitive);
         ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(patch));
         writeIndex(paths, out);
         writeCreated(paths.created, newDir, out);
@@ -73,15 +100,15 @@ public class DirDeltaCreator {
         out.close();
     }
 
-    private DeltaIndex readDeltaPaths(File oldDir, File newDir, IOFileFilter filter) throws IOException {
+    private DeltaIndex readDeltaPaths(File oldDir, File newDir, IOFileFilter filter, IOCase caseSensitive) throws IOException {
         if(!(null != oldDir && oldDir.exists() && oldDir.isDirectory())) throw new IOException("Bad oldDir argument");
         if(!(null != newDir && newDir.exists() && newDir.isDirectory())) throw new IOException("Bad newDir argument");
         // read files
         Collection<File> oldFiles = listFiles(oldDir, filter, filter);
         Collection<File> newFiles = listFiles(newDir, filter, filter);
         // want to do comparing on strings, without touching FS
-        Set<String> oldSet = ImmutableSet.copyOf(Collections2.transform(oldFiles, new Relativiser(oldDir)));
-        Set<String> newSet = ImmutableSet.copyOf(Collections2.transform(newFiles, new Relativiser(newDir)));
+        Set<String> oldSet = ImmutableSet.copyOf(Collections2.transform(oldFiles, new Relativiser(oldDir, caseSensitive)));
+        Set<String> newSet = ImmutableSet.copyOf(Collections2.transform(newFiles, new Relativiser(newDir, caseSensitive)));
         // partitioning
         List<String> createdPaths = Ordering.natural().immutableSortedCopy(Sets.difference(newSet, oldSet));
         List<String> existedPaths = Ordering.natural().immutableSortedCopy(Sets.intersection(oldSet, newSet));
@@ -136,9 +163,11 @@ public class DirDeltaCreator {
 
     private static class Relativiser implements Function<File, String> {
         private final String parent;
+        private final IOCase caseSensitive;
 
-        private Relativiser(File parent) {
+        private Relativiser(File parent, IOCase caseSensitive) {
             this.parent = separatorsToUnix(parent.getPath());
+            this.caseSensitive = caseSensitive;
         }
 
         @Override
@@ -147,7 +176,7 @@ public class DirDeltaCreator {
             // check whether actual child
             checkArgument(parent.equals(path.substring(0, parent.length())));
             String relative = path.substring(parent.length() + 1);
-            return IOCase.SYSTEM.isCaseSensitive() ? relative : relative.toLowerCase();
+            return caseSensitive.isCaseSensitive() ? relative : relative.toLowerCase();
         }
     }
 

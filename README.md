@@ -50,7 +50,7 @@ Maven dependency (available in central repository):
         <groupId>com.alexkasko.delta</groupId>
 	    <artifactId>delta-diff</artifactId>
 	    <!--artifactId>delta-patch</artifactId-->
-	    <version>1.1.1</version>
+	    <version>1.1.2</version>
     </dependency>
 
 For patch file/stream creation you should use one of these methods:
@@ -96,6 +96,10 @@ This project is released under the [MIT License](http://www.opensource.org/licen
 
 Changelog
 ---------
+
+**1.1.2** (2014-08-09)
+
+ * add support for case-sensivity flag (#1)
 
 **1.1.1** (2014-01-31)
 
