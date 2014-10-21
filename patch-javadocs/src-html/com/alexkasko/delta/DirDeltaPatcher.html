@@ -127,7 +127,7 @@
 <span class="sourceLineNo">119</span>            ZipEntry entry = patch.getNextEntry();<a name="line.119"></a>
 <span class="sourceLineNo">120</span>            checkState((en.path + ".gdiff").equals(entry.getName()), "Index and zipstream unsynchronized, index: " + en.path + ", zipstream: " + entry.getName());<a name="line.120"></a>
 <span class="sourceLineNo">121</span>            File file = new File(dir, en.path);<a name="line.121"></a>
-<span class="sourceLineNo">122</span>            if (!file.exists()) throw new IOException("UPDATED file don't exist: " + file);<a name="line.122"></a>
+<span class="sourceLineNo">122</span>            if (!file.exists()) throw new IOException("UPDATED file doesn't exist: " + file);<a name="line.122"></a>
 <span class="sourceLineNo">123</span>            String sha1old = computeSha1(file);<a name="line.123"></a>
 <span class="sourceLineNo">124</span>            if(!sha1old.equals(en.oldSha1)) throw new IOException("UPDATED file check failed for old file: " + file);<a name="line.124"></a>
 <span class="sourceLineNo">125</span>            File patched = new File(dir, en.path + UUID.randomUUID().toString());<a name="line.125"></a>
@@ -145,7 +145,7 @@
 <span class="sourceLineNo">137</span>    private void delete(List&lt;IndexEntry.Deleted&gt; index, File dir) throws IOException {<a name="line.137"></a>
 <span class="sourceLineNo">138</span>        for (IndexEntry.Deleted en : index) {<a name="line.138"></a>
 <span class="sourceLineNo">139</span>            File file = new File(dir, en.path);<a name="line.139"></a>
-<span class="sourceLineNo">140</span>            if (!file.exists()) throw new IOException("DELETED file don't exist: " + file);<a name="line.140"></a>
+<span class="sourceLineNo">140</span>            if (!file.exists()) throw new IOException("DELETED file doesn't exist: " + file);<a name="line.140"></a>
 <span class="sourceLineNo">141</span>            String sha1old = computeSha1(file);<a name="line.141"></a>
 <span class="sourceLineNo">142</span>            if(!sha1old.equals(en.oldSha1)) throw new IOException("DELETED file check failed old file: " + file);<a name="line.142"></a>
 <span class="sourceLineNo">143</span>            boolean deleted = file.delete();<a name="line.143"></a>
