@@ -9,8 +9,8 @@ It can be used to implement auto-updating for rich-client applications.
 
 Delta-diff and delta-patch utilities are available:
 
- - [delta-diff](https://bitbucket.org/alexkasko/share/downloads/delta-diff-1.1.2-distr.tar.gz)
- - [delta-patch](https://bitbucket.org/alexkasko/share/downloads/delta-patch-1.1.2-distr.tar.gz)
+ - [delta-diff](https://bitbucket.org/alexkasko/share/downloads/delta-diff-1.1.3-distr.tar.gz)
+ - [delta-patch](https://bitbucket.org/alexkasko/share/downloads/delta-patch-1.1.3-distr.tar.gz)
 
 Libraries are available in [Maven cental](http://repo1.maven.org/maven2/com/alexkasko/delta/).
 
@@ -54,7 +54,7 @@ Maven dependency (available in central repository):
         <groupId>com.alexkasko.delta</groupId>
 	    <artifactId>delta-diff</artifactId>
 	    <!--artifactId>delta-patch</artifactId-->
-	    <version>1.1.2</version>
+	    <version>1.1.3</version>
     </dependency>
 
 For patch file/stream creation you should use one of these methods:
@@ -100,6 +100,10 @@ This project is released under the [MIT License](http://www.opensource.org/licen
 
 Changelog
 ---------
+
+**1.1.3** (2014-10-21)
+
+ * fix typos in error messages (#2)
 
 **1.1.2** (2014-08-09)
 

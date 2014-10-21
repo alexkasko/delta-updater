@@ -119,7 +119,7 @@ public class DirDeltaPatcher {
             ZipEntry entry = patch.getNextEntry();
             checkState((en.path + ".gdiff").equals(entry.getName()), "Index and zipstream unsynchronized, index: " + en.path + ", zipstream: " + entry.getName());
             File file = new File(dir, en.path);
-            if (!file.exists()) throw new IOException("UPDATED file don't exist: " + file);
+            if (!file.exists()) throw new IOException("UPDATED file doesn't exist: " + file);
             String sha1old = computeSha1(file);
             if(!sha1old.equals(en.oldSha1)) throw new IOException("UPDATED file check failed for old file: " + file);
             File patched = new File(dir, en.path + UUID.randomUUID().toString());
@@ -137,7 +137,7 @@ public class DirDeltaPatcher {
     private void delete(List<IndexEntry.Deleted> index, File dir) throws IOException {
         for (IndexEntry.Deleted en : index) {
             File file = new File(dir, en.path);
-            if (!file.exists()) throw new IOException("DELETED file don't exist: " + file);
+            if (!file.exists()) throw new IOException("DELETED file doesn't exist: " + file);
             String sha1old = computeSha1(file);
             if(!sha1old.equals(en.oldSha1)) throw new IOException("DELETED file check failed old file: " + file);
             boolean deleted = file.delete();
